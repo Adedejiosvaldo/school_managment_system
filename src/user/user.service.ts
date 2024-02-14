@@ -19,9 +19,6 @@ export class UserService {
 
   async getAll() {
     const user = await this.userModel.find();
-    if (!user) {
-      throw new NotFoundException('No USER CURRently exist');
-    }
     return { user, numberOfUsers: user.length };
   }
 
@@ -35,11 +32,11 @@ export class UserService {
 
   async createNewUser(body: createUserDTO) {
     try {
-      const { email } = body;
-      const existingUser = await this.userModel.findOneBy({ email });
-      if (existingUser) {
-        throw new ConflictException('User Already Exist');
-      }
+      //   const { email } = body;
+      //   const existingUser = await this.userModel.findOneBy({ email });
+      //   if (existingUser) {
+      //     throw new ConflictException('User Already Exist');
+      //   }
       const user = await this.userModel.create({ ...body });
       return this.userModel.save(user);
     } catch (error) {
