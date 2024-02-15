@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { Repository } from 'typeorm';
@@ -23,8 +23,26 @@ export class AuthenticationService {
   ) {}
 
   async signup(body: createUserDTO) {
-    const { email, password, name } = body;
-    const hashedPassword = this.hashingService.hash(password);
+    try {
+      const { email, password, name } = body;
+      const hashedPassword = await this.hashingService.hash(password);
+
+      const newUser = await this.userRepository.create({
+        email,
+        name,
+        password,
+      });
+      const accessToken = this.generateToken(newUser);
+      return { accessToken, user: { newUser } };
+    } catch (error) {
+      console.log(error);
+      const puUniqueViolationErrorCode = '23505';
+
+      if (error.code === puUniqueViolationErrorCode) {
+        throw new ConflictException('EMail has been used');
+      }
+      console.log('Hi');
+    }
   }
 
   private async generateToken(user: User) {
@@ -33,6 +51,7 @@ export class AuthenticationService {
       this.jwtConfiguration.accessTokenTTL,
       { email: user.password },
     );
+    return accessToken;
   }
 
   private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
