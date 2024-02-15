@@ -1,15 +1,19 @@
 import {
   Body,
+  Catch,
+  ConflictException,
   Controller,
   Delete,
   Get,
   Param,
   Patch,
   Post,
+  UseFilters,
 } from '@nestjs/common';
-import { createUserDTO } from './dto/createUser.dto';
+import { createUserDTO } from '../iam/authentication/dto/createUser.dto';
 import { UserService } from './user.service';
-import { UpdateUserDTO } from './dto/updateUser.dto';
+import { UpdateUserDTO } from '../iam/authentication/dto/updateUser.dto';
+import { QueryFailedFilter } from 'src/exception/EmailExist.query';
 
 @Controller('users')
 export class UserController {
@@ -24,6 +28,7 @@ export class UserController {
     return this.userService.getAUser(userId);
   }
 
+  @UseFilters(new QueryFailedFilter())
   @Post()
   creatrUser(@Body() body: createUserDTO) {
     return this.userService.createNewUser(body);

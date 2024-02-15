@@ -1,4 +1,41 @@
-import { Injectable } from '@nestjs/common';
-
+import { Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entity/user.entity';
+import { Repository } from 'typeorm';
+import { createUserDTO } from './dto/createUser.dto';
+import { BcryptService } from '../hashing/bcrypt.auth';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import jwtConfig from '../config/jwt.config';
+import { ActiveUserDTO } from './dto/ActiveUser.dto';
 @Injectable()
-export class AuthenticationService {}
+export class AuthenticationService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly hashingService: BcryptService,
+
+    private readonly jwtService: JwtService,
+
+    //
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+  ) {}
+
+  async signup(body: createUserDTO) {
+    const { email, password, name } = body;
+    const hashedPassword = this.hashingService.hash(password);
+  }
+
+  private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
+    return await this.jwtService.sign(
+      { sub: userId, ...payload },
+      {
+        issuer: this.jwtConfiguration.issuer,
+        audience: this.jwtConfiguration.audience,
+        secret: this.jwtConfiguration.secret,
+        expiresIn,
+      },
+    );
+  }
+}

@@ -6,9 +6,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
-import { createUserDTO } from './dto/createUser.dto';
+import { createUserDTO } from '../iam/authentication/dto/createUser.dto';
 import { NotFoundError } from 'rxjs';
-import { UpdateUserDTO } from './dto/updateUser.dto';
+import { UpdateUserDTO } from '../iam/authentication/dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -32,15 +32,16 @@ export class UserService {
 
   async createNewUser(body: createUserDTO) {
     try {
-      //   const { email } = body;
-      //   const existingUser = await this.userModel.findOneBy({ email });
-      //   if (existingUser) {
-      //     throw new ConflictException('User Already Exist');
-      //   }
       const user = await this.userModel.create({ ...body });
       return this.userModel.save(user);
     } catch (error) {
-      console.log('error:', error.message);
+      console.log(error);
+      const puUniqueViolationErrorCode = '23505';
+
+      if (error.code === puUniqueViolationErrorCode) {
+        throw new ConflictException('EMail has been used');
+      }
+      console.log('Hi');
     }
   }
 
