@@ -74,7 +74,7 @@ export class AuthenticationService {
     const accessToken = await this.signToken<Partial<ActiveUserDTO>>(
       user.id,
       this.jwtConfiguration.accessTokenTTL,
-      { email: user.password },
+      { email: user.email },
     );
     return accessToken;
   }

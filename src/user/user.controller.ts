@@ -14,10 +14,14 @@ import { CreateUser } from '../iam/authentication/dto/auth/createUser.dto';
 import { UserService } from './user.service';
 import { UpdateUserDTO } from '../iam/authentication/dto/updateUser.dto';
 import { QueryFailedFilter } from 'src/exception/EmailExist.query';
+import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
+import { AuthType } from 'src/iam/authentication/enum/auth.type';
 
+@Auth(AuthType.Bearer)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+  @Auth(AuthType.Bearer)
   @Get()
   getAllUsers() {
     return this.userService.getAll();

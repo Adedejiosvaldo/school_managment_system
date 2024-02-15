@@ -2,17 +2,21 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { LoginDTO } from '../dto/login.dto';
 import { AuthenticationService } from './authentication.service';
 import { CreateUser } from './dto/auth/createUser.dto';
+import { Auth } from './decorators/auth.decorator';
+import { AuthType } from './enum/auth.type';
 
 @Controller('auth')
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
+  @Auth(AuthType.None)
   @Post('signup')
   Signup(@Body() body: CreateUser) {
     return this.authService.signup(body);
   }
 
-  @Post('/login')
+  @Auth(AuthType.None)
+  @Post('login')
   Login(@Body() bodyDTO: LoginDTO) {
     return this.authService.Login(bodyDTO);
   }
