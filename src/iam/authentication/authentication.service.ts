@@ -27,6 +27,14 @@ export class AuthenticationService {
     const hashedPassword = this.hashingService.hash(password);
   }
 
+  private async generateToken(user: User) {
+    const accessToken = await this.signToken<Partial<ActiveUserDTO>>(
+      user.id,
+      this.jwtConfiguration.accessTokenTTL,
+      { email: user.password },
+    );
+  }
+
   private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
     return await this.jwtService.sign(
       { sub: userId, ...payload },
