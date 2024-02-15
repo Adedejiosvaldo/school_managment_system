@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
-import { createUserDTO } from '../iam/authentication/dto/createUser.dto';
+import { CreateUser } from '../iam/authentication/dto/auth/createUser.dto';
 import { NotFoundError } from 'rxjs';
 import { UpdateUserDTO } from '../iam/authentication/dto/updateUser.dto';
 
@@ -30,7 +30,7 @@ export class UserService {
     return coffee;
   }
 
-  async createNewUser(body: createUserDTO) {
+  async createNewUser(body: CreateUser) {
     try {
       const user = await this.userModel.create({ ...body });
       return this.userModel.save(user);

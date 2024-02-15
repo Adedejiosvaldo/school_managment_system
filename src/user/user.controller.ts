@@ -10,7 +10,7 @@ import {
   Post,
   UseFilters,
 } from '@nestjs/common';
-import { createUserDTO } from '../iam/authentication/dto/createUser.dto';
+import { CreateUser } from '../iam/authentication/dto/auth/createUser.dto';
 import { UserService } from './user.service';
 import { UpdateUserDTO } from '../iam/authentication/dto/updateUser.dto';
 import { QueryFailedFilter } from 'src/exception/EmailExist.query';
@@ -30,7 +30,7 @@ export class UserController {
 
   @UseFilters(new QueryFailedFilter())
   @Post()
-  creatrUser(@Body() body: createUserDTO) {
+  creatrUser(@Body() body: CreateUser) {
     return this.userService.createNewUser(body);
   }
 
