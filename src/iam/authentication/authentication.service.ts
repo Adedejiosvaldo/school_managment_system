@@ -25,23 +25,22 @@ export class AuthenticationService {
   async signup(body: createUserDTO) {
     try {
       const { email, password, name } = body;
-      const hashedPassword = await this.hashingService.hash(password);
+      const hashedPassword: string = await this.hashingService.hash(password);
 
       const newUser = await this.userRepository.create({
         email,
         name,
-        password,
+        password: hashedPassword,
       });
-      const accessToken = this.generateToken(newUser);
+      const accessToken = await this.generateToken(newUser);
+      await this.userRepository.save(newUser);
       return { accessToken, user: { newUser } };
     } catch (error) {
-      console.log(error);
       const puUniqueViolationErrorCode = '23505';
 
       if (error.code === puUniqueViolationErrorCode) {
-        throw new ConflictException('EMail has been used');
+        throw new ConflictException('Email has been used already');
       }
-      console.log('Hi');
     }
   }
 
