@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -20,6 +21,7 @@ import { ForgotPasswordDTO } from './dto/auth/ForgotPassword.dto';
 
 import { MailerService } from '@nestjs-modules/mailer';
 import { Request } from 'express';
+import { ResetPasswordDTO } from './dto/auth/ResetPassword.dto';
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -94,10 +96,33 @@ export class AuthenticationService {
 
       await this.sendResetEmail(email, token);
 
-      return { Message: '' };
+      return { Message: 'Email Sent successfully' };
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async resetPassword(token: string, body: ResetPasswordDTO) {
+    console.log(token);
+    const { confirmPassword, newPassword } = body;
+    const user = await this.userRepository.findOneBy({ resetToken: token });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    if (newPassword !== confirmPassword) {
+      throw new BadRequestException('Password dont match');
+    }
+
+    user.password = newPassword;
+    user.resetToken = null;
+    await this.userRepository.save(user);
+    user;
+    return {
+      message: 'Password updated successfully',
+      newUser: { name: user.name, email: user.email },
+    };
   }
 
   //   Private Methods
@@ -135,14 +160,14 @@ export class AuthenticationService {
     console.log(this.request.protocol);
     const resetURL = `${this.request.protocol}://${this.request.get(
       'host',
-    )}/api/v1/users/resetPassword/${resetToken}`;
+    )}//auth/reset-password/${resetToken}`;
 
     const message = `Forgot your password? Submit a request with your new password and confirm it to : ${resetURL}. \n If you didn't forget your password. Ignore this email`;
     try {
       await this.mailingService.sendMail({
         to: email,
         subject: 'Reset Your password',
-        html: `<p>Please click the link below to reset your password:<a href="{{resetURL}}">Reset Password</a></p><br><p>If you didn't request this, you can safely ignore this email.</p>`,
+        html: `<p>Please click the link below to reset your password:<a href=${{ resetURL }}">Reset Password</a></p><br><p>If you didn't request this, you can safely ignore this email.</p>`,
         text: message,
         context: { resetURL },
       });
