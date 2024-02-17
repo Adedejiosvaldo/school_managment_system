@@ -17,7 +17,7 @@ import { QueryFailedFilter } from 'src/exception/EmailExist.query';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enum/auth.type';
 
-@Auth(AuthType.None)
+@Auth(AuthType.Bearer)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}

@@ -92,12 +92,21 @@ export class AuthenticationService {
       }
 
       const token = this.generateResetToken();
+      // Calculate deadline
+      const expiresIn = new Date();
+
+      expiresIn.setMinutes(expiresIn.getMinutes() + 10);
       user.resetToken = token;
+      //   Expires In
+      user.resetTokenExpiresIn = expiresIn;
+
       await this.userRepository.save(user);
 
       await this.sendResetEmail(email, token);
 
-      return { Message: 'Email Sent successfully' };
+      return {
+        Message: 'Email Sent successfully and token will expire in 10 MINS',
+      };
     } catch (error) {
       console.log(error);
     }
@@ -107,9 +116,20 @@ export class AuthenticationService {
     console.log(token);
     const { confirmPassword, newPassword } = body;
     const user = await this.userRepository.findOneBy({ resetToken: token });
-
+    console.log(user.email);
     if (!user) {
       throw new BadRequestException('User not found');
+    }
+
+    const resetTokenTTL = user.resetTokenExpiresIn;
+
+    if (resetTokenTTL && new Date() > resetTokenTTL) {
+      user.resetToken = null;
+      console.log(user.resetToken);
+      user.resetTokenExpiresIn = null;
+      throw new UnauthorizedException(
+        'Reset Token has expired, Resend another',
+      );
     }
 
     if (newPassword !== confirmPassword) {
@@ -119,6 +139,8 @@ export class AuthenticationService {
     const hashedPassword = await this.hashingService.hash(newPassword);
     user.password = hashedPassword;
     user.resetToken = null;
+    user.resetTokenExpiresIn = null;
+
     await this.userRepository.save(user);
     return {
       message: 'Password updated successfully',
@@ -127,16 +149,35 @@ export class AuthenticationService {
   }
 
   //   Update Password
-  async updatePassword(body: UpdatePasswordDTO) {}
+  async updatePassword(body: UpdatePasswordDTO, ActiveUser: ActiveUserDTO) {
+    const { newPassword, oldPassword } = body;
+    const user = await this.userRepository.findOneBy({ id: +ActiveUser.sub });
+
+    const isPasswordCorrect = await this.hashingService.compare(
+      oldPassword,
+      user.password,
+    );
+
+    if (!isPasswordCorrect) {
+      throw new UnauthorizedException('Incorrect Password');
+    }
+    const hashedNewPassword = await this.hashingService.hash(newPassword);
+    user.password = hashedNewPassword;
+
+    await this.userRepository.save(user);
+    const token = this.generateToken(user);
+    return { status: 'Successfully changedPassword', token };
+  }
 
   //   Private Methods
-
   private async generateToken(user: User) {
     const accessToken = await this.signToken<Partial<ActiveUserDTO>>(
       user.id,
       this.jwtConfiguration.accessTokenTTL,
       { email: user.email },
     );
+
+    // user.passwordResetExpiresIn = Date.now() + 10 * 60 * 1000;
     return accessToken;
   }
 

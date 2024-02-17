@@ -50,6 +50,6 @@ export class AuthenticationController {
     @Body() bodyDTO: UpdatePasswordDTO,
     @ActiveUser() currentUser: ActiveUserDTO,
   ) {
-    console.log(currentUser.sub);
+    return this.authService.updatePassword(bodyDTO, currentUser);
   }
 }
