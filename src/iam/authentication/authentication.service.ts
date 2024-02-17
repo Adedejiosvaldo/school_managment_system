@@ -18,10 +18,10 @@ import { ActiveUserDTO } from './dto/ActiveUser.dto';
 import { SignInDTO } from './dto/auth/Signin.dto';
 import { CreateUser } from './dto/auth/createUser.dto';
 import { ForgotPasswordDTO } from './dto/auth/ForgotPassword.dto';
-
 import { MailerService } from '@nestjs-modules/mailer';
 import { Request } from 'express';
 import { ResetPasswordDTO } from './dto/auth/ResetPassword.dto';
+import { UpdatePasswordDTO } from './dto/auth/UpdatePassword.dto';
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -69,11 +69,12 @@ export class AuthenticationService {
     if (!user) {
       throw new UnauthorizedException('User does not exist');
     }
-
-    const isPasswordCorrect = this.hashingService.compare(
+    console.log(user.password);
+    const isPasswordCorrect = await this.hashingService.compare(
       password,
       user.password,
     );
+    console.log(isPasswordCorrect);
     if (!isPasswordCorrect) {
       throw new UnauthorizedException('Invalid Password');
     }
@@ -115,15 +116,18 @@ export class AuthenticationService {
       throw new BadRequestException('Password dont match');
     }
 
-    user.password = newPassword;
+    const hashedPassword = await this.hashingService.hash(newPassword);
+    user.password = hashedPassword;
     user.resetToken = null;
     await this.userRepository.save(user);
-    user;
     return {
       message: 'Password updated successfully',
       newUser: { name: user.name, email: user.email },
     };
   }
+
+  //   Update Password
+  async updatePassword(body: UpdatePasswordDTO) {}
 
   //   Private Methods
 
@@ -157,17 +161,16 @@ export class AuthenticationService {
     email: string,
     resetToken: string,
   ): Promise<void> {
-    console.log(this.request.protocol);
     const resetURL = `${this.request.protocol}://${this.request.get(
       'host',
-    )}//auth/reset-password/${resetToken}`;
+    )}/auth/reset-password/${resetToken}`;
 
     const message = `Forgot your password? Submit a request with your new password and confirm it to : ${resetURL}. \n If you didn't forget your password. Ignore this email`;
     try {
       await this.mailingService.sendMail({
         to: email,
         subject: 'Reset Your password',
-        html: `<p>Please click the link below to reset your password:<a href=${{ resetURL }}">Reset Password</a></p><br><p>If you didn't request this, you can safely ignore this email.</p>`,
+        html: `<p>Please click the link below to reset your password:<a href=${resetURL}">Reset Password</a></p><br><p>If you didn't request this, you can safely ignore this email.</p>`,
         text: message,
         context: { resetURL },
       });
