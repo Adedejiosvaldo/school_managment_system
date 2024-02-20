@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import dbConfig from './config/db.config';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { UtilsModule } from './utils/utils.module';
 
 // const config: ConfigService = undefined;
 // console.log(process.env.DATABASE);
@@ -54,6 +55,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       }),
       inject: [ConfigService],
     }),
+    UtilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
