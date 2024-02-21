@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import dbConfig from './config/db.config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UtilsModule } from './utils/utils.module';
+import { ClassModule } from './class/class.module';
 
 // const config: ConfigService = undefined;
 // console.log(process.env.DATABASE);
@@ -56,6 +57,7 @@ import { UtilsModule } from './utils/utils.module';
       inject: [ConfigService],
     }),
     UtilsModule,
+    ClassModule,
   ],
   controllers: [AppController],
   providers: [AppService],
