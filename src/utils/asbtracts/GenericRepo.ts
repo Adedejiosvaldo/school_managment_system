@@ -7,7 +7,9 @@
 // }
 
 import { DeleteResult } from 'typeorm';
-
+interface BaseEntity {
+  id: number;
+}
 export interface BaseInterfaceRepository<T> {
   create(data: T | any): Promise<T>;
 
@@ -20,4 +22,8 @@ export interface BaseInterfaceRepository<T> {
   remove(id: string): Promise<DeleteResult>;
 
   findWithRelations(relations: any): Promise<T[]>;
+}
+
+interface anythingGies {
+  id: number;
 }

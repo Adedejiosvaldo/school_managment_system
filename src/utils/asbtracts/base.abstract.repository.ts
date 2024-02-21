@@ -1,17 +1,23 @@
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, FindOneOptions, Repository } from 'typeorm';
 import { BaseInterfaceRepository } from './GenericRepo';
+
+interface BaseEntity {
+  id: number;
+}
+
+interface IfindOneById<T> extends FindOneOptions<T> {
+  id: number;
+}
 
 export abstract class BaseAbstractRepository<T>
   implements BaseInterfaceRepository<T>
 {
-  private entity: Repository<T>;
+  protected constructor(private readonly entity: Repository<T>) {}
 
-  protected constructor(entity: Repository<T>) {
-    this.entity = entity;
-  }
+  async findOneById(id: number): Promise<T | null> {
+    const options: IfindOneById<T> = { id };
 
-  async findOneById(id: number): Promise<T> {
-    return await this.entity.findOneBy({id:id});
+    return await this.entity.findOne(options);
   }
 
   create(data: any): Promise<T> {
