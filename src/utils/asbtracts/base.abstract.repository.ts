@@ -1,9 +1,6 @@
-import { DeleteResult, FindOneOptions, Repository } from 'typeorm';
+import { DeepPartial, DeleteResult, FindOneOptions, Repository } from 'typeorm';
 import { BaseInterfaceRepository } from './GenericRepo';
-
-interface BaseEntity {
-  id: number;
-}
+import { ConflictException } from '@nestjs/common';
 
 interface IfindOneById<T> extends FindOneOptions<T> {
   id: number;
@@ -14,26 +11,30 @@ export abstract class BaseAbstractRepository<T>
 {
   protected constructor(private readonly entity: Repository<T>) {}
 
-  async findOneById(id: number): Promise<T | null> {
-    const options: IfindOneById<T> = { id };
+  async create(data: Partial<T> | Partial<T>[]): Promise<T | T[]> {
+    const entity = this.entity.create(data as DeepPartial<T>);
+    return await this.entity.save(entity);
+  }
 
+  async findOne(id: number): Promise<T> {
+    const options: IfindOneById<T> = { id };
     return await this.entity.findOne(options);
   }
 
-  create(data: any): Promise<T> {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<T[]> {
+    return await this.entity.find();
   }
 
-  findByCondition(filterCondition: any): Promise<T> {
-    throw new Error('Method not implemented.');
+  async update(id: number, data: Partial<T>): Promise<T> {
+    const options: IfindOneById<T> = { id };
+    const entity = await this.entity.findOne(options);
+    if (!entity) {
+      return null;
+    }
+    Object.assign(entity, data);
+    return await this.entity.save(entity);
   }
-  findAll(): Promise<T[]> {
-    throw new Error('Method not implemented.');
-  }
-  remove(id: string): Promise<DeleteResult> {
-    throw new Error('Method not implemented.');
-  }
-  findWithRelations(relations: any): Promise<T[]> {
-    throw new Error('Method not implemented.');
+  async delete(id: number): Promise<DeleteResult> {
+    return await this.entity.delete(id);
   }
 }
