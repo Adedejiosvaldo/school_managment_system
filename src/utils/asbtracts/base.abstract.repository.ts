@@ -14,7 +14,9 @@ export abstract class BaseAbstractRepository<T>
   async create(data: Partial<T> | Partial<T>[]): Promise<T | T[]> {
     try {
       const entity = this.entity.create(data as DeepPartial<T>);
-      return await this.entity.save(entity);
+      const savedData = await this.entity.save(entity);
+      console.log(savedData);
+      return savedData;
     } catch (error) {
       const puUniqueViolationErrorCode = '23505';
 
