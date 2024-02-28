@@ -22,7 +22,6 @@ export class ClassService {
   }
 
   async createClass(data: createClassDTO) {
-    console.log('service', data);
     const newClass = await this.classRepo.create({ ...data });
     return newClass;
   }

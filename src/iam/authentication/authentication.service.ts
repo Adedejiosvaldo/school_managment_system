@@ -69,12 +69,11 @@ export class AuthenticationService {
     if (!user) {
       throw new UnauthorizedException('User does not exist');
     }
-    console.log(user.password);
+
     const isPasswordCorrect = await this.hashingService.compare(
       password,
       user.password,
     );
-    console.log(isPasswordCorrect);
     if (!isPasswordCorrect) {
       throw new UnauthorizedException('Invalid Password');
     }
@@ -220,3 +219,5 @@ export class AuthenticationService {
     }
   }
 }
+
+// Generic Auth Service

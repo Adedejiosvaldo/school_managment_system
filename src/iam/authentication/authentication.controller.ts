@@ -9,10 +9,11 @@ import { ResetPasswordDTO } from './dto/auth/ResetPassword.dto';
 import { UpdatePasswordDTO } from './dto/auth/UpdatePassword.dto';
 import { ActiveUser } from './decorators/ActiveUser.decorator';
 import { ActiveUserDTO } from './dto/ActiveUser.dto';
+import { User } from 'src/user/entity/user.entity';
 
 @Controller('auth')
 export class AuthenticationController {
-  constructor(private readonly authService: AuthenticationService) {}
+  constructor(private readonly authService: AuthenticationService<User>) {}
   @Auth(AuthType.None)
   @Post('signup')
   Signup(@Body() body: CreateUser) {

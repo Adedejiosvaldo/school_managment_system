@@ -17,7 +17,6 @@ export class ClassController {
   @Post()
   @Auth(AuthType.None)
   createClass(@Body() body: createClassDTO) {
-    console.log(body);
     return this.classService.createClass({ ...body });
   }
 }
