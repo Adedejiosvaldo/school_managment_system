@@ -1,12 +1,15 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Parent } from './Parent.entity';
 
 @Entity()
 export class Student {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()

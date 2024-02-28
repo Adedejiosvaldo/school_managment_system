@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Student } from './Student';
+import { Student } from './Student.entity';
 
 @Entity()
 export class Parent {
@@ -15,11 +15,14 @@ export class Parent {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
+
+  @Column()
+  role: string;
 
   @OneToMany(() => Student, (student) => student.parent)
   students: Student[];

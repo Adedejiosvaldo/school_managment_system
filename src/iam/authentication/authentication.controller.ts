@@ -13,7 +13,7 @@ import { User } from 'src/user/entity/user.entity';
 
 @Controller('auth')
 export class AuthenticationController {
-  constructor(private readonly authService: AuthenticationService<User>) {}
+  constructor(private readonly authService: AuthenticationService) {}
   @Auth(AuthType.None)
   @Post('signup')
   Signup(@Body() body: CreateUser) {
