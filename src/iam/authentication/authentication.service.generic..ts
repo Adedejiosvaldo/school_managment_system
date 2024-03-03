@@ -1,6 +1,6 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { BaseAuthService } from './generic/base.auth.service';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { BcryptService } from '../hashing/bcrypt.auth';
 import { ActiveUserDTO } from './dto/ActiveUser.dto';
 import jwtConfig from '../config/jwt.config';
@@ -18,9 +18,17 @@ export interface AuthResponse<T> {
   accessToken: string;
   user: T[];
 }
+interface IfindOneByEmail<T> extends FindOneOptions<T> {
+  email: string;
+}
+
+interface UserWithPassword {
+  password: string;
+  // Other properties common to users...
+}
 
 @Injectable()
-export class BaseAuthServiceALL<T> {
+export class BaseAuthServiceALL<T extends UserWithPassword> {
   constructor(
     private readonly repository: Repository<T>,
     private readonly hashingService: BcryptService,
@@ -94,9 +102,49 @@ export class BaseAuthServiceALL<T> {
       }
     }
   }
-  login(dto: V): Promise<T> {
-    throw new Error('Method not implemented.');
+
+  async login<V extends object>(dto: V): Promise<string> {
+    try {
+      // Validate the login DTO
+      const errors = await validate(dto);
+      if (errors.length > 0) {
+        const messages = errors
+          .map((error) => Object.values(error.constraints))
+          .join(', ');
+        throw new Error(messages);
+      }
+
+      if (!('email' in dto) || !('password' in dto)) {
+        throw new Error('Email and password are required');
+      }
+      const { email, password } = dto as { email: string; password: string };
+      const options: IfindOneByEmail<T> = { email };
+      // Fetch user from the repository based on the provided email
+      const user = await this.repository.findOne(options);
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      // Verify if the provided password matches the hashed password
+      // (you need to implement a password hashing and comparison function)
+      const isPasswordValid = await this.hashingService.compare(
+        password,
+        user.password,
+      );
+      if (!isPasswordValid) {
+        throw new Error('Invalid password');
+      }
+
+      // Generate and return an access token
+      const accessToken = await this.generateToken(user);
+      return accessToken;
+    } catch (error) {
+      console.error('Error during login:', error);
+      throw new Error('An error occurred during login');
+    }
   }
+
   forgotPassword(dto: V): Promise<void> {
     throw new Error('Method not implemented.');
   }
