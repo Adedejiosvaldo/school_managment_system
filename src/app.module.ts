@@ -9,6 +9,9 @@ import dbConfig from './config/db.config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UtilsModule } from './utils/utils.module';
 import { ClassModule } from './class/class.module';
+import { StudentModule } from './student/student.module';
+import { AdminModule } from './admin/admin.module';
+import { TeacherModule } from './teacher/teacher.module';
 
 // const config: ConfigService = undefined;
 // console.log(process.env.DATABASE);
@@ -58,6 +61,9 @@ import { ClassModule } from './class/class.module';
     }),
     UtilsModule,
     ClassModule,
+    StudentModule,
+    AdminModule,
+    TeacherModule,
   ],
   controllers: [AppController],
   providers: [AppService],

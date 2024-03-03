@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Parent } from './Parent.entity';
+import { Parent } from '../../iam/authentication/entities/Parent.entity';
 
 @Entity()
 export class Student {

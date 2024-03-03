@@ -11,10 +11,14 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuardGuard } from './authentication/guards/authentication_guard/authentication_guard.guard';
 import { AccessTokenGuard } from './authentication/guards/auth_guard/access_token_guard.guard';
+import { Student } from '../student/entity/Student.entity';
+import { Teacher } from '../teacher/entity/Teacher.entity';
+import { Parent } from './authentication/entities/Parent.entity';
+import { BaseAuthServiceALL } from './authentication/authentication.service.generic.';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Student, Teacher, Parent]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
   ],
@@ -25,5 +29,6 @@ import { AccessTokenGuard } from './authentication/guards/auth_guard/access_toke
     AccessTokenGuard,
   ],
   controllers: [AuthenticationController],
+  exports:[BaseAuthServiceALL]
 })
 export class IamModule {}

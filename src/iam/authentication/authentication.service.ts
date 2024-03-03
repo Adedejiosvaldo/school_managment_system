@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entity/user.entity';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { BcryptService } from '../hashing/bcrypt.auth';
 import { ConfigService, ConfigType } from '@nestjs/config';
@@ -22,6 +22,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Request } from 'express';
 import { ResetPasswordDTO } from './dto/auth/ResetPassword.dto';
 import { UpdatePasswordDTO } from './dto/auth/UpdatePassword.dto';
+import { LoginDTO } from '../dto/login.dto';
+import { createClassDTO } from 'src/class/dto/CreateClass.dto';
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -33,6 +35,7 @@ export class AuthenticationService {
     // Mailing service
     private readonly mailingService: MailerService,
     //
+
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
 
@@ -45,7 +48,7 @@ export class AuthenticationService {
       const { email, password, name } = body;
       const hashedPassword: string = await this.hashingService.hash(password);
 
-      const newUser = await this.userRepository.create({
+      const newUser = this.userRepository.create({
         email,
         name,
         password: hashedPassword,
@@ -167,6 +170,9 @@ export class AuthenticationService {
     const token = this.generateToken(user);
     return { status: 'Successfully changedPassword', token };
   }
+
+  // Auth Private Methods
+  private async signInToStudent<T>(data: LoginDTO, repo: Repository<T>) {}
 
   //   Private Methods
   private async generateToken(user: User) {

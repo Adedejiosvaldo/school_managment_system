@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Student } from './Student.entity';
+import { Student } from '../../../student/entity/Student.entity';
 
 @Entity()
 export class Parent {
