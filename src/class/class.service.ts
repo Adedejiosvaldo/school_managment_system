@@ -29,17 +29,9 @@ export class ClassService {
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
-  ) {
-    this.authService = new BaseAuthServiceALL<Teacher>(
-      this.teacherRepo,
-      this.hashingService,
-      this.jwtService,
-      this.jwtConfiguration,
-    );
-  }
+  ) {}
 
   async getAllClasses() {
-    await this.authService.createAccount(dto);
     const classes = await this.classRepo.findAll();
     if (classes.length === 0) {
       return 'No class at the moment';

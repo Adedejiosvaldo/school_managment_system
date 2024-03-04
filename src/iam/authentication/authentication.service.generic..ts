@@ -144,16 +144,6 @@ export class BaseAuthServiceALL<T extends UserWithPassword> {
       throw new Error('An error occurred during login');
     }
   }
-
-  forgotPassword(dto: V): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  resetPassword(dto: V): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  updatePassword(dto: V): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
 }
 
 // Generic Auth Service

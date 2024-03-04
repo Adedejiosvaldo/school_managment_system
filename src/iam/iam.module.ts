@@ -25,10 +25,11 @@ import { BaseAuthServiceALL } from './authentication/authentication.service.gene
   providers: [
     AuthenticationService,
     BcryptService,
+    BaseAuthServiceALL,
     { provide: APP_GUARD, useClass: AuthenticationGuardGuard },
     AccessTokenGuard,
   ],
   controllers: [AuthenticationController],
-  exports:[BaseAuthServiceALL]
+  exports: [BaseAuthServiceALL],
 })
 export class IamModule {}
