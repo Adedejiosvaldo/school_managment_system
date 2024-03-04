@@ -24,6 +24,6 @@ export class Parent {
   @Column()
   role: string;
 
-  @OneToMany(() => Student, (student) => student.parent)
-  students: Student[];
+  //   @OneToMany(() => Student, (student) => student.parent)
+  //   students: Student[];
 }

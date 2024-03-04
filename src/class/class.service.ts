@@ -20,15 +20,6 @@ export class ClassService {
   constructor(
     @Inject('ClassRepositoryInterface')
     private readonly classRepo: ClassRepositoryInterface,
-
-    private authService: BaseAuthServiceALL<Teacher>,
-
-    @InjectRepository(Teacher)
-    private readonly teacherRepo: Repository<Teacher>,
-    private readonly hashingService: BcryptService,
-    private readonly jwtService: JwtService,
-    @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
   async getAllClasses() {

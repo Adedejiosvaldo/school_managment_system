@@ -12,14 +12,23 @@ export class Student {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ default: 'student' })
   role: string;
+
+  @Column()
+  password: string;
 
   @Column({ default: () => 'now()' })
   dateOfAdmission: Date;
 
-  @ManyToOne(() => Parent, (parent) => parent.students)
-  parent: Parent;
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ nullable: true })
+  resetTokenExpiresIn: Date;
+
+  //   @ManyToOne(() => Parent, (parent) => parent.students)
+  //   parent: Parent;
 }
 // +-------------------+      +-------------------+      +-------------------+
 // |      Students     |      |      Teachers     |      |      Parents      |

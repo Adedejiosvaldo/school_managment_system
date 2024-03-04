@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Teacher {
+export class Admin {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,9 +14,9 @@ export class Teacher {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
-  resetToken: string;
+  @Column()
+  schoolName: string;
 
-  @Column({ nullable: true })
-  resetTokenExpiresIn: Date;
+  @Column({ default: 'admin' })
+  role: string;
 }
