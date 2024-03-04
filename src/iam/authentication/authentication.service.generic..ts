@@ -30,8 +30,8 @@ interface UserWithPassword {
 @Injectable()
 export class BaseAuthServiceALL<T extends UserWithPassword> {
   constructor(
-    private readonly repository: Repository<T>,
     private readonly hashingService: BcryptService,
+    private readonly repository: Repository<T>,
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
@@ -145,15 +145,15 @@ export class BaseAuthServiceALL<T extends UserWithPassword> {
     }
   }
 
-  forgotPassword(dto: V): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  resetPassword(dto: V): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  updatePassword(dto: V): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
+  //   forgotPassword(dto: V): Promise<void> {
+  //     throw new Error('Method not implemented.');
+  //   }
+  //   resetPassword(dto: V): Promise<void> {
+  //     throw new Error('Method not implemented.');
+  //   }
+  //   updatePassword(dto: V): Promise<void> {
+  //     throw new Error('Method not implemented.');
+  //   }
 }
 
 // Generic Auth Service

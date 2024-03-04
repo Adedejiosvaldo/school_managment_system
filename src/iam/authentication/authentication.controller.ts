@@ -10,20 +10,27 @@ import { UpdatePasswordDTO } from './dto/auth/UpdatePassword.dto';
 import { ActiveUser } from './decorators/ActiveUser.decorator';
 import { ActiveUserDTO } from './dto/ActiveUser.dto';
 import { User } from 'src/user/entity/user.entity';
+import { StudentAuthService } from './services/student.ts/student.ts.service';
+import { studentSignUpDTO } from './dto/auth/studentDTO/studentSignUp.dto';
 
 @Controller('auth')
 export class AuthenticationController {
-  constructor(private readonly authService: AuthenticationService) {}
+  constructor(
+    private readonly authService: AuthenticationService,
+    private readonly studentAuth: StudentAuthService,
+  ) {}
+
+  //   Student
   @Auth(AuthType.None)
-  @Post('signup')
-  Signup(@Body() body: CreateUser) {
-    return this.authService.signup(body);
+  @Post('student/signup')
+  Signup(@Body() body: studentSignUpDTO) {
+    return this.studentAuth.createUser(body);
   }
 
   @Auth(AuthType.None)
-  @Post('login')
+  @Post('student/login')
   Login(@Body() bodyDTO: LoginDTO) {
-    return this.authService.Login(bodyDTO);
+    return this.studentAuth.loginUser(bodyDTO)
   }
 
   @Auth(AuthType.None)
