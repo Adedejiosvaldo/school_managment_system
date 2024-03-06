@@ -7,7 +7,7 @@ import { BcryptService } from 'src/iam/hashing/bcrypt.auth';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from 'src/iam/config/jwt.config';
-import { School } from './entity/School.entity';
+import { School } from '../school/entity/School.entity';
 
 @Module({
   imports: [

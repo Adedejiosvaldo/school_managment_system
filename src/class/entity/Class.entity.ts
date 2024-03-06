@@ -1,4 +1,4 @@
-import { School } from 'src/admin/entity/School.entity';
+import { School } from 'src/school/entity/School.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

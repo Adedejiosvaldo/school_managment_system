@@ -12,6 +12,7 @@ import { ClassModule } from './class/class.module';
 import { StudentModule } from './student/student.module';
 import { AdminModule } from './admin/admin.module';
 import { TeacherModule } from './teacher/teacher.module';
+import { SchoolModule } from './school/school.module';
 
 // const config: ConfigService = undefined;
 // console.log(process.env.DATABASE);
@@ -64,6 +65,7 @@ import { TeacherModule } from './teacher/teacher.module';
     StudentModule,
     AdminModule,
     TeacherModule,
+    SchoolModule,
   ],
   controllers: [AppController],
   providers: [AppService],

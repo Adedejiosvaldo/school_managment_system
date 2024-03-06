@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Admin } from './Admin.entity';
+import { Admin } from '../../admin/entity/Admin.entity';
 import { Class } from 'src/class/entity/Class.entity';
 
 @Entity()

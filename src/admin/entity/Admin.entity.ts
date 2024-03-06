@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { School } from './School.entity';
+import { School } from '../../school/entity/School.entity';
 
 @Entity()
 export class Admin {
@@ -15,7 +15,7 @@ export class Admin {
   @Column()
   password: string;
 
-  @OneToMany(() => School, (school) => school.admin)
+  @OneToMany(() => School, (school) => school.admin, { cascade: true })
   schools: School[];
 
   @Column({ default: 'admin' })
