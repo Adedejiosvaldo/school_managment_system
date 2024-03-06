@@ -31,7 +31,7 @@ import { ParentAuthControllerController } from './authentication/controllers/par
   providers: [
     AuthenticationService,
     BcryptService,
-
+    BaseAuthServiceALL,
     { provide: APP_GUARD, useClass: AuthenticationGuardGuard },
     AccessTokenGuard,
     StudentAuthServicesService,
@@ -43,6 +43,6 @@ import { ParentAuthControllerController } from './authentication/controllers/par
     TeacherAuthControllerController,
     ParentAuthControllerController,
   ],
-  exports: [],
+  exports: [IamModule],
 })
 export class IamModule {}

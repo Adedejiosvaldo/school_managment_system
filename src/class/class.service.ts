@@ -10,6 +10,7 @@ import jwtConfig from 'src/iam/config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateUser } from 'src/iam/authentication/dto/auth/createUser.dto';
 
 @Injectable()
 // Create Interface  that extends the BaseRepo with the entity
@@ -22,7 +23,7 @@ export class ClassService {
     private readonly classRepo: ClassRepositoryInterface,
   ) {}
 
-  async getAllClasses() {
+  async getAllClasses(body: CreateUser) {
     const classes = await this.classRepo.findAll();
     if (classes.length === 0) {
       return 'No class at the moment';

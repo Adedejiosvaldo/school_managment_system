@@ -14,6 +14,9 @@ export class Teacher {
   @Column()
   password: string;
 
+  @Column({ default: 'teacher' })
+  role: string;
+
   @Column({ nullable: true })
   resetToken: string;
 

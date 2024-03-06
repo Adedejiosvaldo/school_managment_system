@@ -13,6 +13,8 @@ import { createClassDTO } from 'src/class/dto/CreateClass.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUser } from './dto/auth/createUser.dto';
 import { validate } from 'class-validator';
+import { Teacher } from 'src/teacher/entity/Teacher.entity';
+import { LoginDTO } from '../dto/login.dto';
 
 export interface AuthResponse<T> {
   accessToken: string;
@@ -28,20 +30,21 @@ interface UserWithPassword {
 }
 
 @Injectable()
-export class BaseAuthServiceALL<T extends UserWithPassword> {
+export class BaseAuthServiceALL {
   constructor(
-    private readonly repository: Repository<T>,
+    @InjectRepository(Teacher)
+    private readonly teacherRepo: Repository<Teacher>,
     private readonly hashingService: BcryptService,
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
-  private async generateToken<Z>(user: Z): Promise<string> {
+  private async generateToken(user: Teacher): Promise<string> {
     const accessToken = await this.signToken<Partial<ActiveUserDTO>>(
-      user['id'],
+      user.id,
       this.jwtConfiguration.accessTokenTTL,
-      { email: user['email'], role: user['role'] },
+      { email: user.email, role: user.role },
     );
 
     // user.passwordResetExpiresIn = Date.now() + 10 * 60 * 1000;
@@ -60,39 +63,20 @@ export class BaseAuthServiceALL<T extends UserWithPassword> {
     );
   }
 
-  async student(dto: CreateUser): Promise<AuthResponse<T>> {
-    return await this.createAccount<CreateUser>(dto);
-    // return createAccount;
-  }
-
-  async createAccount<V extends object>(dto: V): Promise<AuthResponse<T>> {
+  async createAccount(dto: CreateUser) {
     try {
-      const errors = await validate(dto);
-      if (errors.length > 0) {
-        // Throw an error with validation messages
-        const messages = errors
-          .map((error) => Object.values(error.constraints))
-          .join(', ');
-        throw new Error(messages);
-      }
-
-      // / Ensure that password is defined
-      if (!('password' in dto)) {
-        throw new Error('Password is required');
-      }
-
       // Extract password and rest of the DTO properties
-      const { password, ...rest } = dto as { password: string };
+      const { password } = dto;
 
       const hashedPassword: string = await this.hashingService.hash(password);
 
-      const newUser = await this.repository.create({
-        ...rest,
+      const newUser = await this.teacherRepo.create({
+        ...dto,
         password: hashedPassword,
-      } as any);
+      });
 
       const accessToken = await this.generateToken(newUser);
-      await this.repository.save(newUser);
+      await this.teacherRepo.save(newUser);
       return { accessToken, user: newUser };
     } catch (error) {
       const puUniqueViolationErrorCode = '23505';
@@ -102,25 +86,48 @@ export class BaseAuthServiceALL<T extends UserWithPassword> {
       }
     }
   }
+  //   async createAccount<V extends object>(dto: V): Promise<AuthResponse<T>> {
+  //     try {
+  //       const errors = await validate(dto);
+  //       if (errors.length > 0) {
+  //         // Throw an error with validation messages
+  //         const messages = errors
+  //           .map((error) => Object.values(error.constraints))
+  //           .join(', ');
+  //         throw new Error(messages);
+  //       }
 
-  async login<V extends object>(dto: V): Promise<string> {
+  //       // / Ensure that password is defined
+  //       if (!('password' in dto)) {
+  //         throw new Error('Password is required');
+  //       }
+
+  //       // Extract password and rest of the DTO properties
+  //       const { password, ...rest } = dto as { password: string };
+
+  //       const hashedPassword: string = await this.hashingService.hash(password);
+
+  //       const newUser = await this.repository.create({
+  //         ...rest,
+  //         password: hashedPassword,
+  //       } as any);
+
+  //       const accessToken = await this.generateToken(newUser);
+  //       await this.repository.save(newUser);
+  //       return { accessToken, user: newUser };
+  //     } catch (error) {
+  //       const puUniqueViolationErrorCode = '23505';
+
+  //       if (error.code === puUniqueViolationErrorCode) {
+  //         throw new ConflictException('Email has been used already');
+  //       }
+  //     }
+  //   }
+
+  async login(dto: LoginDTO): Promise<string> {
     try {
-      // Validate the login DTO
-      const errors = await validate(dto);
-      if (errors.length > 0) {
-        const messages = errors
-          .map((error) => Object.values(error.constraints))
-          .join(', ');
-        throw new Error(messages);
-      }
-
-      if (!('email' in dto) || !('password' in dto)) {
-        throw new Error('Email and password are required');
-      }
-      const { email, password } = dto as { email: string; password: string };
-      const options: IfindOneByEmail<T> = { email };
-      // Fetch user from the repository based on the provided email
-      const user = await this.repository.findOne(options);
+      const { email, password } = dto;
+      const user = await this.teacherRepo.findOneBy({ email });
 
       if (!user) {
         throw new Error('User not found');

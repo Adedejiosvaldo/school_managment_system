@@ -3,15 +3,16 @@ import { ClassService } from './class.service';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enum/auth.type';
 import { createClassDTO } from './dto/CreateClass.dto';
+import { CreateUser } from 'src/iam/authentication/dto/auth/createUser.dto';
 
 @Controller('class')
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
 
   @Auth(AuthType.None)
-  @Get()
-  getAll() {
-    return this.classService.getAllClasses();
+  @Post()
+  getAll(@Body() body: CreateUser) {
+    return this.classService.getAllClasses(body);
   }
 
   @Post()

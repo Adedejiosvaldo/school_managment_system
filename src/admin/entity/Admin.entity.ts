@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { School } from './School.entity';
 
 @Entity()
 export class Admin {
@@ -14,8 +15,8 @@ export class Admin {
   @Column()
   password: string;
 
-  @Column()
-  schoolName: string;
+  @OneToMany(() => School, (school) => school.admin)
+  schools: School[];
 
   @Column({ default: 'admin' })
   role: string;

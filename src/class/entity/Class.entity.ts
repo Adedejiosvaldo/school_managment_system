@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { School } from 'src/admin/entity/School.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Class {
@@ -10,4 +11,7 @@ export class Class {
 
   @Column()
   studentNumber: number;
+
+  @ManyToOne(() => School, (school) => school.classes)
+  school: School;
 }
