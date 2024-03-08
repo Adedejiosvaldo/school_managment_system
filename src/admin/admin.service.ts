@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './entity/Admin.entity';
 import { Repository } from 'typeorm';
 import { BcryptService } from 'src/iam/hashing/bcrypt.auth';
-import { AdminDTO, createAdminDTO } from './dto/CreateAdmin.dto';
+import { createAdminDTO } from './dto/CreateAdmin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ActiveUser } from 'src/iam/authentication/decorators/ActiveUser.decorator';
 import { userInfo } from 'os';
@@ -86,5 +86,16 @@ export class AdminService {
     } catch (error) {
       throw new BadRequestException('Bad request -', error.message);
     }
+  }
+
+  async getAllAdmins() {
+    return this.adminRepo.find({
+      select: ['email', 'id', 'name', 'role'],
+      relations: { schools: true },
+    });
+  }
+
+  async getOneAdmin(id: number) {
+    return this.adminRepo.findOneBy({ id });
   }
 }
