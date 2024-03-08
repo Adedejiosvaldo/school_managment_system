@@ -1,13 +1,12 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class AdminDTO {
+export class createAdminDTO {
   @IsString()
   name: string;
+
   @IsString()
   email: string;
+
   @IsString()
   password: string;
-  @IsString()
-  schoolName: string;
-
 }

@@ -21,6 +21,7 @@ import { TeacherAuthService } from './authentication/services/teacher-auth-servi
 import { StudentAuthControllerController } from './authentication/controllers/student-auth-controller/student-auth-controller.controller';
 import { TeacherAuthControllerController } from './authentication/controllers/teacher-auth-controller/teacher-auth-controller.controller';
 import { ParentAuthControllerController } from './authentication/controllers/parent-auth-controller/parent-auth-controller.controller';
+import { RolesGuard } from './authorization/guards/roles.guard';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ParentAuthControllerController } from './authentication/controllers/par
     BcryptService,
     BaseAuthServiceALL,
     { provide: APP_GUARD, useClass: AuthenticationGuardGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
     AccessTokenGuard,
     StudentAuthServicesService,
     TeacherAuthService,

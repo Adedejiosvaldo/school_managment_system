@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './entity/Admin.entity';
 import { Repository } from 'typeorm';
 import { BcryptService } from 'src/iam/hashing/bcrypt.auth';
-import { AdminDTO } from './dto/CreateAdmin.dto';
+import { AdminDTO, createAdminDTO } from './dto/CreateAdmin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ActiveUser } from 'src/iam/authentication/decorators/ActiveUser.decorator';
 import { userInfo } from 'os';
@@ -28,7 +28,7 @@ export class AdminService {
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
-  async createAdmin(body: AdminDTO) {
+  async createAdmin(body: createAdminDTO) {
     try {
       const { password } = body;
       const hashedPassword = await this.hashingService.hash(password);
