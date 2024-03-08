@@ -6,9 +6,9 @@ import { Roles } from 'src/iam/authorization/decorators/Role.decorators';
 import { Role } from 'src/iam/authorization/enum/Role';
 import { SchoolService } from './school.service';
 import { createSchoolDTO } from './dto/createSchool.dto';
+import { ActiveUser } from 'src/iam/authentication/decorators/ActiveUser.decorator';
 
 @Auth(AuthType.Bearer)
-@Roles(Role.Admin)
 @Controller('school')
 export class SchoolController {
   constructor(private readonly schoolService: SchoolService) {}
@@ -16,8 +16,13 @@ export class SchoolController {
   justARes() {
     return 'Hello';
   }
+
+  @Roles(Role.Admin)
   @Post()
-  createSchool(@Body() body: createSchoolDTO, @Req() req: ActiveUserDTO) {
+  createSchool(
+    @Body() body: createSchoolDTO,
+    @ActiveUser() req: ActiveUserDTO,
+  ) {
     return this.schoolService.createNewSchool(body, req);
   }
 }

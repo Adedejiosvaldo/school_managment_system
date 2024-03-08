@@ -7,6 +7,6 @@ export class createSchoolDTO {
   @IsString()
   address: string;
 
-  @IsArray()
-  classes: Class[];
+  //   @IsArray()
+  //   classes: Class[];
 }

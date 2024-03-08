@@ -15,18 +15,21 @@ export class SchoolService {
   ) {}
 
   async createNewSchool(body: createSchoolDTO, adminId: ActiveUserDTO) {
-    const AdminExist = await this.adminReppo.findOneBy({ id: +adminId.sub });
+    const admin = await this.adminReppo.findOneBy({ id: +adminId.sub });
 
-    if (!AdminExist) {
+    if (!admin) {
       throw new BadRequestException('Admin does not exist');
     }
+
     const newSchool = await this.schoolRepo.create({
-      admin: adminId,
+      admin: admin,
       name: body.name,
       address: body.address,
-      //   classes: body.classes,
-      //   classes:body
     });
     return this.schoolRepo.save(newSchool);
+  }
+
+  async getAllSchool() {
+    return this.schoolRepo.find({ relations: { admin: true } });
   }
 }

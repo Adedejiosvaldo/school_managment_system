@@ -88,14 +88,14 @@ export class AdminService {
     }
   }
 
-  async getAllAdmins() {
+  async getAllAdmins(): Promise<Admin[]> {
     return this.adminRepo.find({
       select: ['email', 'id', 'name', 'role'],
       relations: { schools: true },
     });
   }
 
-  async getOneAdmin(id: number) {
+  async getOneAdmin(id: number): Promise<Admin> {
     return this.adminRepo.findOneBy({ id });
   }
 }
