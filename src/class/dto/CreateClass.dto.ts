@@ -6,6 +6,9 @@ export class createClassDTO {
   name: string;
 
   //   @IsNotEmpty()
+  @IsString()
+  description: string;
+
   @IsNumber()
-  studentNumber: number;
+  numberOfStudentPermitted: string;
 }

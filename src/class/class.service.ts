@@ -11,6 +11,7 @@ import { ConfigType } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUser } from 'src/iam/authentication/dto/auth/createUser.dto';
+import { School } from 'src/school/entity/School.entity';
 
 @Injectable()
 // Create Interface  that extends the BaseRepo with the entity
@@ -21,6 +22,7 @@ export class ClassService {
   constructor(
     @Inject('ClassRepositoryInterface')
     private readonly classRepo: ClassRepositoryInterface,
+    @InjectRepository(School) private readonly schoolRepo: Repository<School>,
   ) {}
 
   async getAllClasses(body: CreateUser) {
@@ -32,7 +34,7 @@ export class ClassService {
   }
 
   async createClass(data: createClassDTO) {
-    const newClass = await this.classRepo.create({ ...data });
+    const newClass = await this.classRepo.create({});
     return newClass;
   }
 }

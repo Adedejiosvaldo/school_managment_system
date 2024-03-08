@@ -37,7 +37,12 @@ export class AdminService {
         password: hashedPassword,
       });
       const accessToken = this.jwtService.sign(
-        { sub: newAdmin.id, role: newAdmin.role, email: newAdmin.email },
+        {
+          sub: newAdmin.id,
+          role: newAdmin.role,
+          email: newAdmin.email,
+          schoolID: newAdmin.schools,
+        },
         {
           issuer: this.jwtConfiguration.issuer,
           audience: this.jwtConfiguration.audience,

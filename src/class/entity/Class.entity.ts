@@ -9,8 +9,11 @@ export class Class {
   @Column()
   name: string;
 
-  @Column()
-  studentNumber: number;
+  @Column({ nullable: true })
+  description: number;
+
+  @Column({ nullable: true })
+  numberOfStudentPermitted: number;
 
   @ManyToOne(() => School, (school) => school.classes)
   school: School;
