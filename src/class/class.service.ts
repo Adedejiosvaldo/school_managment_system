@@ -60,13 +60,6 @@ export class ClassService {
     return newClass;
   }
 
-  //   async getAClass(id: number): Promise<Class> {
-  //     const options = { id };
-  //     const resultt = await this.classRepo.findOne(options);
-
-  //     return resultt;
-  //   }
-
   async getAClass(id: number): Promise<Class | undefined> {
     const options: FindOneOptions<Class> = { where: { id } };
     const validClass = await this.classRepo.findOne(options);

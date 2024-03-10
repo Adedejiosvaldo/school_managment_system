@@ -51,6 +51,6 @@ export class SchoolService {
   }
 
   async getAllSchool() {
-    return this.schoolRepo.find({ relations: { admin: true } });
+    return this.schoolRepo.find({ relations: { classes: true } });
   }
 }

@@ -14,7 +14,7 @@ export class SchoolController {
   constructor(private readonly schoolService: SchoolService) {}
   @Get()
   justARes() {
-    return 'Hello';
+    return this.schoolService.getAllSchool();
   }
 
   @Roles(Role.Admin)
