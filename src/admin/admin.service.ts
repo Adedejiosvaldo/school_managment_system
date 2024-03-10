@@ -41,7 +41,7 @@ export class AdminService {
           sub: newAdmin.id,
           role: newAdmin.role,
           email: newAdmin.email,
-          schoolID: newAdmin.schools,
+          schoolID: 16,
         },
         {
           issuer: this.jwtConfiguration.issuer,
@@ -79,7 +79,7 @@ export class AdminService {
         throw new UnauthorizedException('Invalid Password');
       }
       const accessToken = this.jwtService.sign(
-        { sub: user.id, role: user.role, email: user.email },
+        { sub: user.id, role: user.role, email: user.email, schoolID: 16 },
         {
           issuer: this.jwtConfiguration.issuer,
           audience: this.jwtConfiguration.audience,

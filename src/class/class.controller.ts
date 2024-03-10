@@ -4,20 +4,26 @@ import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enum/auth.type';
 import { createClassDTO } from './dto/CreateClass.dto';
 import { CreateUser } from 'src/iam/authentication/dto/auth/createUser.dto';
+import { Role } from 'src/iam/authorization/enum/Role';
+import { Roles } from 'src/iam/authorization/decorators/Role.decorators';
+import { ActiveUser } from 'src/iam/authentication/decorators/ActiveUser.decorator';
+import { ActiveUserDTO } from 'src/iam/authentication/dto/ActiveUser.dto';
 
 @Controller('class')
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
 
   @Auth(AuthType.None)
-  @Post()
-  getAll(@Body() body: CreateUser) {
-    return this.classService.getAllClasses(body);
+  @Get()
+  getAll() {
+    return 'Hello';
   }
 
+  @Auth(AuthType.Bearer)
+  @Roles(Role.Admin)
   @Post()
-  @Auth(AuthType.None)
-  createClass(@Body() body: createClassDTO) {
-    return this.classService.createClass({ ...body });
+  createClass(@Body() body: createClassDTO, @ActiveUser() user: ActiveUserDTO) {
+    console.log(user);
+    return this.classService.createClass(body, user);
   }
 }

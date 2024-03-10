@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClassRepositoryInterface } from './repository/class.interface.repo';
 import { createClassDTO } from './dto/CreateClass.dto';
 import { AuthenticationService } from 'src/iam/authentication/authentication.service';
@@ -12,6 +17,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUser } from 'src/iam/authentication/dto/auth/createUser.dto';
 import { School } from 'src/school/entity/School.entity';
+import { ActiveUserDTO } from 'src/iam/authentication/dto/ActiveUser.dto';
 
 @Injectable()
 // Create Interface  that extends the BaseRepo with the entity
@@ -33,8 +39,19 @@ export class ClassService {
     return classes;
   }
 
-  async createClass(data: createClassDTO) {
-    const newClass = await this.classRepo.create({});
+  async createClass(data: createClassDTO, schoolID: ActiveUserDTO) {
+    const school = await this.schoolRepo.findOneBy({ id: schoolID.schoolID });
+
+    if (!school) {
+      throw new BadRequestException('A School has to exist before classes');
+    }
+    const newClass = await this.classRepo.create({
+      numberOfStudentPermitted: data.numberOfStudentPermitted,
+      name: data.name,
+      description: data.description,
+      school: school,
+    });
+
     return newClass;
   }
 }

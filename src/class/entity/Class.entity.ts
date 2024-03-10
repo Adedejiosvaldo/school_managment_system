@@ -6,11 +6,11 @@ export class Class {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column({ nullable: true })
-  description: number;
+  description: string;
 
   @Column({ nullable: true })
   numberOfStudentPermitted: number;

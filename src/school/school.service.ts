@@ -36,9 +36,9 @@ export class SchoolService {
         address: body.address,
       });
       const newlySavedSchool = await this.schoolRepo.save(newSchool);
-      console.log('User', this.request.user);
 
       this.request.user.schoolID = newlySavedSchool.id;
+      console.log('User', this.request.user);
       return newlySavedSchool;
     } catch (error) {
       const puUniqueViolationErrorCode = '23505';
