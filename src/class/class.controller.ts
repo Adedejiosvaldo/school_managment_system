@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ClassService } from './class.service';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enum/auth.type';
@@ -16,7 +16,7 @@ export class ClassController {
   @Auth(AuthType.None)
   @Get()
   getAll() {
-    return 'Hello';
+    return this.classService.getAllClasses();
   }
 
   @Auth(AuthType.Bearer)
@@ -25,5 +25,12 @@ export class ClassController {
   createClass(@Body() body: createClassDTO, @ActiveUser() user: ActiveUserDTO) {
     console.log(user);
     return this.classService.createClass(body, user);
+  }
+
+  @Auth(AuthType.Bearer)
+  @Get(':id')
+  getAClass(@Param('id') id: number) {
+    console.log(id);
+    return this.classService.getAClass(id);
   }
 }

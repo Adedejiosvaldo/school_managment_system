@@ -6,6 +6,10 @@ interface IfindOneById<T> extends FindOneOptions<T> {
   id: number;
 }
 
+interface FindOptions {
+  id: number;
+}
+
 export abstract class BaseAbstractRepository<T>
   implements BaseInterfaceRepository<T>
 {
@@ -26,14 +30,21 @@ export abstract class BaseAbstractRepository<T>
     }
   }
 
-  async findOne(id: number): Promise<T> {
-    const options: IfindOneById<T> = { id };
-    const user = await this.entity.findOne(options);
-    if (!user) {
+  async findOne(options: FindOneOptions<T>): Promise<T | undefined> {
+    const doc = await this.entity.findOne(options);
+    if (!doc) {
       throw new NotFoundException('No doc was found');
     }
-    return;
+    return doc;
   }
+  //   async findOne(id: number): Promise<T> {
+  //     const options: IfindOneById<T> = { id };
+  //     const doc = await this.entity.findOne(options);
+  //     if (!doc) {
+  //       throw new NotFoundException('No doc was found');
+  //     }
+  //     return doc;
+  //   }
 
   async findAll(): Promise<T[]> {
     return await this.entity.find();

@@ -14,10 +14,15 @@ import { JwtService } from '@nestjs/jwt';
 import jwtConfig from 'src/iam/config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUser } from 'src/iam/authentication/dto/auth/createUser.dto';
 import { School } from 'src/school/entity/School.entity';
 import { ActiveUserDTO } from 'src/iam/authentication/dto/ActiveUser.dto';
+import { Class } from './entity/Class.entity';
+
+interface IfindOneById<T> extends FindOneOptions<T> {
+  id: number;
+}
 
 @Injectable()
 // Create Interface  that extends the BaseRepo with the entity
@@ -31,7 +36,7 @@ export class ClassService {
     @InjectRepository(School) private readonly schoolRepo: Repository<School>,
   ) {}
 
-  async getAllClasses(body: CreateUser) {
+  async getAllClasses() {
     const classes = await this.classRepo.findAll();
     if (classes.length === 0) {
       return 'No class at the moment';
@@ -53,5 +58,18 @@ export class ClassService {
     });
 
     return newClass;
+  }
+
+  //   async getAClass(id: number): Promise<Class> {
+  //     const options = { id };
+  //     const resultt = await this.classRepo.findOne(options);
+
+  //     return resultt;
+  //   }
+
+  async getAClass(id: number): Promise<Class | undefined> {
+    const options: FindOneOptions<Class> = { where: { id } };
+    const validClass = await this.classRepo.findOne(options);
+    return validClass;
   }
 }
