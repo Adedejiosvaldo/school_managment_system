@@ -1,12 +1,14 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Admin } from '../../admin/entity/Admin.entity';
 import { Class } from 'src/class/entity/Class.entity';
+import { Teacher } from 'src/teacher/entity/Teacher.entity';
 
 @Entity()
 export class School {
@@ -24,4 +26,8 @@ export class School {
 
   @OneToMany(() => Class, (studentClass) => studentClass.school)
   classes: Class;
+
+  @OneToMany(() => Teacher, (teacher) => teacher.school)
+  @JoinColumn()
+  teachers: Teacher[];
 }

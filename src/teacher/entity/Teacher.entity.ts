@@ -1,4 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Class } from 'src/class/entity/Class.entity';
+import { School } from 'src/school/entity/School.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Teacher {
@@ -22,4 +34,11 @@ export class Teacher {
 
   @Column({ nullable: true })
   resetTokenExpiresIn: Date;
+
+  @ManyToOne(() => School, (school) => school.teachers)
+  school: School;
+
+  @OneToOne(() => Class, (schoolClass) => schoolClass.teacher)
+  @JoinColumn()
+  class: Class;
 }
