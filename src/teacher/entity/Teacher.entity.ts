@@ -35,8 +35,8 @@ export class Teacher {
   @Column({ nullable: true })
   resetTokenExpiresIn: Date;
 
-  @ManyToOne(() => School, (school) => school.teachers)
-  school: School;
+  //   @ManyToOne(() => School, (school) => school.teachers)
+  //   school: School;
 
   @OneToOne(() => Class, (schoolClass) => schoolClass.teacher)
   @JoinColumn()

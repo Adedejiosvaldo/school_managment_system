@@ -27,7 +27,7 @@ export class School {
   @OneToMany(() => Class, (studentClass) => studentClass.school)
   classes: Class;
 
-  @OneToMany(() => Teacher, (teacher) => teacher.school)
-  @JoinColumn()
-  teachers: Teacher[];
+  //   @OneToMany(() => Teacher, (teacher) => teacher.school)
+  //   @JoinColumn()
+  //   teachers: Teacher[];
 }
