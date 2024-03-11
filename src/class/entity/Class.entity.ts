@@ -1,10 +1,12 @@
 import { School } from 'src/school/entity/School.entity';
+import { Subject } from 'src/subject/entity/Subject.entity';
 import { Teacher } from 'src/teacher/entity/Teacher.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -29,4 +31,7 @@ export class Class {
   @OneToOne(() => Teacher, (teacher) => teacher.class)
   @JoinColumn()
   teacher: Teacher;
+
+  @OneToMany(() => Subject, (subjects) => subjects.class)
+  subject: Subject[];
 }
