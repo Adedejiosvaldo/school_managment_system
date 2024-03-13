@@ -58,6 +58,21 @@ export abstract class BaseAbstractRepository<T>
   async findAll(): Promise<T[]> {
     return await this.entity.find();
   }
+  async findAllWithRelations(relations?: string[]): Promise<T[]> {
+    const options: FindOneOptions<T> = {};
+    // return await this.entity.find({ relations: relations });
+    if (relations && relations.length > 0) {
+      options.relations = relations;
+    }
+
+    const entities = await this.entity.find(options);
+
+    if (!entities || entities.length === 0) {
+      throw new NotFoundException(`No ${this.entity.metadata.name} found`);
+    }
+
+    return entities;
+  }
 
   async update(id: number, data: Partial<T>): Promise<T> {
     const options: IfindOneById<T> = { id };

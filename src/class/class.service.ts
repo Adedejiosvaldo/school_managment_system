@@ -39,12 +39,11 @@ export class ClassService {
   ) {}
 
   async getAllClasses() {
-    const classes = await this.classRepository.find({
-      relations: { subject: true },
-    });
-    if (classes.length === 0) {
-      return 'No class at the moment';
-    }
+    const classes = await this.classRepo.findAllWithRelations(['subject']);
+    // const classes = await this.classRepository.find({
+    //   relations: { subject: true },
+    // });
+
     return classes;
   }
 
