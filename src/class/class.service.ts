@@ -33,11 +33,15 @@ export class ClassService {
   constructor(
     @Inject('ClassRepositoryInterface')
     private readonly classRepo: ClassRepositoryInterface,
+    @InjectRepository(Class)
+    private readonly classRepository: Repository<Class>,
     @InjectRepository(School) private readonly schoolRepo: Repository<School>,
   ) {}
 
   async getAllClasses() {
-    const classes = await this.classRepo.findAll();
+    const classes = await this.classRepository.find({
+      relations: { subject: true },
+    });
     if (classes.length === 0) {
       return 'No class at the moment';
     }

@@ -32,9 +32,9 @@ export abstract class BaseAbstractRepository<T>
 
   async findOne(options: FindOneOptions<T>): Promise<T | undefined> {
     const doc = await this.entity.findOne(options);
-    if (!doc) {
-      throw new NotFoundException('No doc was found');
-    }
+    // if (!doc) {
+    //   throw new NotFoundException('No doc was found');
+    // }
     return doc;
   }
   //   async findOne(id: number): Promise<T> {
