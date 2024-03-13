@@ -37,6 +37,7 @@ export abstract class BaseAbstractRepository<T>
     // }
     return doc;
   }
+
   //   async findOne(id: number): Promise<T> {
   //     const options: IfindOneById<T> = { id };
   //     const doc = await this.entity.findOne(options);
