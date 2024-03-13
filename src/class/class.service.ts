@@ -66,11 +66,13 @@ export class ClassService {
 
   async getAClass(id: number): Promise<Class | undefined> {
     const options: FindOneOptions<Class> = { where: { id } };
-    // const validClass = await this.classRepo.findOne(options);
-    const validClass = await this.classRepository.findOne({
-      where: { id: id },
-      relations: ['subject'],
-    });
+    const validClass = await this.classRepo.findOneWithRelations(options, [
+      'subject',
+    ]);
+    // const validClass = await this.classRepository.findOne({
+    //   where: { id: id },
+    //   relations: ['subject'],
+    // });
 
     return validClass;
   }

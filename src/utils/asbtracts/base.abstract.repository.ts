@@ -30,6 +30,23 @@ export abstract class BaseAbstractRepository<T>
     }
   }
 
+  async findOneWithRelations(
+    options: FindOneOptions<T>,
+    relations?: string[],
+  ): Promise<T | undefined> {
+    if (relations && relations.length > 0) {
+      options.relations = [...relations];
+    }
+
+    const entity = await this.entity.findOne(options);
+
+    if (!entity) {
+      throw new NotFoundException(`${this.entity.metadata.name} not found`);
+    }
+
+    return entity;
+  }
+
   async findOne(options: FindOneOptions<T>): Promise<T | undefined> {
     const doc = await this.entity.findOne(options);
     // if (!doc) {
@@ -37,15 +54,6 @@ export abstract class BaseAbstractRepository<T>
     // }
     return doc;
   }
-
-  //   async findOne(id: number): Promise<T> {
-  //     const options: IfindOneById<T> = { id };
-  //     const doc = await this.entity.findOne(options);
-  //     if (!doc) {
-  //       throw new NotFoundException('No doc was found');
-  //     }
-  //     return doc;
-  //   }
 
   async findAll(): Promise<T[]> {
     return await this.entity.find();
