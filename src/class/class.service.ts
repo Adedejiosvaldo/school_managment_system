@@ -72,7 +72,21 @@ export class ClassService {
     //   where: { id: id },
     //   relations: ['subject'],
     // });
-
+    const className = 'PRY3'; // Example class name
+    const rollNumber = generateRollNumber(className, 8); // Generate a roll number with 8 characters
+    console.log(rollNumber);
     return validClass;
   }
+}
+function generateRollNumber(className: string, length: number): string {
+  const prefix = className.substring(0, 4).toUpperCase(); // Use first three characters of class name as prefix
+  const characters = '0123456789'; // You can customize characters as needed
+  const charactersLength = characters.length;
+  let result = prefix;
+
+  for (let i = 0; i < length - prefix.length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
 }

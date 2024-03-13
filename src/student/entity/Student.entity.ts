@@ -1,5 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Parent } from '../../iam/authentication/entities/Parent.entity';
+import { Class } from 'src/class/entity/Class.entity';
 
 @Entity()
 export class Student {
@@ -18,6 +26,9 @@ export class Student {
   @Column()
   password: string;
 
+  @Column({ unique: true, nullable: true })
+  rollNumber: string;
+
   @Column({ default: () => 'now()' })
   dateOfAdmission: Date;
 
@@ -26,6 +37,10 @@ export class Student {
 
   @Column({ nullable: true })
   resetTokenExpiresIn: Date;
+
+  @ManyToMany(() => Class, (schoolClass) => schoolClass.students)
+  @JoinTable()
+  class: Class;
 
   //   @ManyToOne(() => Parent, (parent) => parent.students)
   //   parent: Parent;

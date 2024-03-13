@@ -7,7 +7,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import dbConfig from './config/db.config';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { UtilsModule } from './utils/utils.module';
 import { ClassModule } from './class/class.module';
 import { StudentModule } from './student/student.module';
 import { AdminModule } from './admin/admin.module';
@@ -62,7 +61,6 @@ import { AttendanceModule } from './attendance/attendance.module';
       }),
       inject: [ConfigService],
     }),
-    UtilsModule,
     ClassModule,
     StudentModule,
     AdminModule,

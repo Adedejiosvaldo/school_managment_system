@@ -1,10 +1,12 @@
 import { School } from 'src/school/entity/School.entity';
+import { Student } from 'src/student/entity/Student.entity';
 import { Subject } from 'src/subject/entity/Subject.entity';
 import { Teacher } from 'src/teacher/entity/Teacher.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -34,4 +36,7 @@ export class Class {
 
   @OneToMany(() => Subject, (subjects) => subjects.class)
   subject: Subject[];
+
+  @ManyToMany(() => Student, (student) => student.class)
+  students: Student[];
 }
