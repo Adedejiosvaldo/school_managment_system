@@ -13,7 +13,7 @@ import { AccessTokenGuard } from './authentication/guards/auth_guard/access_toke
 import { Student } from '../student/entity/Student.entity';
 import { Teacher } from '../teacher/entity/Teacher.entity';
 import { Parent } from './authentication/entities/Parent.entity';
-import { BaseAuthServiceALL } from './authentication/authentication.service.generic.';
+// import { BaseAuthServiceALL } from './authentication/authentication.service.generic.';
 import { StudentAuthServicesService } from './authentication/services/student-auth-services/student-auth-services.service';
 import { TeacherAuthService } from './authentication/services/teacher-auth-services/teacher-auth-services.service';
 // import { ParentAuthServicesService } from './authentication/services/parent-auth-services/parent-auth-services.service';
@@ -32,7 +32,7 @@ import { RolesGuard } from './authorization/guards/roles.guard';
   providers: [
     AuthenticationService,
     BcryptService,
-    BaseAuthServiceALL,
+
     { provide: APP_GUARD, useClass: AuthenticationGuardGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     AccessTokenGuard,

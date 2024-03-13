@@ -15,7 +15,7 @@ export abstract class BaseAbstractRepository<T>
 {
   protected constructor(private readonly entity: Repository<T>) {}
 
-  async create(data: Partial<T> | Partial<T>[]): Promise<T | T[]> {
+  async create(data: Partial<T> | Partial<T>[]): Promise<T> {
     try {
       const entity = this.entity.create(data as DeepPartial<T>);
       const savedData = await this.entity.save(entity);

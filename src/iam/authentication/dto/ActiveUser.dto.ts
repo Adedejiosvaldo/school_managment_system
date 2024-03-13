@@ -3,5 +3,6 @@ export interface ActiveUserDTO {
   name: string;
   email: string;
   role: string;
-  schoolID: number;
+  schoolID?: number;
+  classId?: number;
 }

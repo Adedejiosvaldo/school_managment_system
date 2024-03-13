@@ -8,7 +8,7 @@ import { ClassRepositoryInterface } from './repository/class.interface.repo';
 import { createClassDTO } from './dto/CreateClass.dto';
 import { AuthenticationService } from 'src/iam/authentication/authentication.service';
 import { Teacher } from 'src/teacher/entity/Teacher.entity';
-import { BaseAuthServiceALL } from 'src/iam/authentication/authentication.service.generic.';
+// import { BaseAuthServiceALL } from 'src/iam/authentication/authentication.service.generic.';
 import { BcryptService } from 'src/iam/hashing/bcrypt.auth';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from 'src/iam/config/jwt.config';
