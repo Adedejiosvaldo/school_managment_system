@@ -39,7 +39,10 @@ export class ClassService {
   ) {}
 
   async getAllClasses() {
-    const classes = await this.classRepo.findAllWithRelations(['subject']);
+    const classes = await this.classRepo.findAllWithRelations([
+      'students',
+      'subject',
+    ]);
     // const classes = await this.classRepository.find({
     //   relations: { subject: true },
     // });

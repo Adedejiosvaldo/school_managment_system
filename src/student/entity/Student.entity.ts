@@ -40,7 +40,7 @@ export class Student {
 
   @ManyToMany(() => Class, (schoolClass) => schoolClass.students)
   @JoinTable()
-  class: Class;
+  classes: Class[];
 
   //   @ManyToOne(() => Parent, (parent) => parent.students)
   //   parent: Parent;

@@ -6,6 +6,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -37,6 +38,7 @@ export class Class {
   @OneToMany(() => Subject, (subjects) => subjects.class)
   subject: Subject[];
 
-  @ManyToMany(() => Student, (student) => student.class)
+  @ManyToMany(() => Student, (student) => student.classes)
+  @JoinTable()
   students: Student[];
 }

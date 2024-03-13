@@ -19,7 +19,6 @@ export abstract class BaseAbstractRepository<T>
     try {
       const entity = this.entity.create(data as DeepPartial<T>);
       const savedData = await this.entity.save(entity);
-      console.log(savedData);
       return savedData;
     } catch (error) {
       const puUniqueViolationErrorCode = '23505';

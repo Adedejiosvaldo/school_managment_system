@@ -31,27 +31,33 @@ export class StudentService {
 
     private readonly hashingService: BcryptService,
   ) {}
-
-  async createATeacher(
-    dtoData: CreateStudentDTO,
-  ): Promise<{ accessToken: string; student: Student }> {
+  // Promise<{ accessToken: string; student: Student }>
+  async createAStudent(dtoData: CreateStudentDTO) {
     const { email, password, name, classID } = dtoData;
     const hashedPassword = await this.hashingService.hash(password);
+
     const schoolClass = await this.classRepo.findOneBy({ id: classID });
     if (!schoolClass) {
       throw new BadRequestException('Class does not exist');
     }
+
+    const className = schoolClass.name; // Example class name
+    let rollNumber = await this.generateRollNumber(className, 8); // Generate a roll number with 8 characters
+
     const student = await this.studentRepo.create({
       name: name,
       password: hashedPassword,
       email,
-      class: schoolClass,
+      rollNumber: rollNumber,
+      classes: [schoolClass],
     });
     const accessToken = await this.generateToken(student);
+
     return { accessToken, student };
+    // return { classID, schoolClass };
   }
 
-  async loginTeacher(data: LoginDTO): Promise<{ accessToken: string }> {
+  async loginStudent(data: LoginDTO): Promise<{ accessToken: string }> {
     const { email, password } = data;
     const options: FindOneOptions<Student> = { where: { email } };
     const teacherExist = await this.studentRepo.findOne(options);
@@ -71,6 +77,27 @@ export class StudentService {
     const accessToken = await this.generateToken(teacherExist);
 
     return { accessToken };
+  }
+
+  async getStudentInfo() {
+    const studentInfo = await this.studentRepo.findAllWithRelations(['class']);
+    return studentInfo;
+  }
+
+  private async generateRollNumber(
+    className: string,
+    length: number,
+  ): Promise<string> {
+    const prefix = className.substring(0, 4).toUpperCase(); // Use first three characters of class name as prefix
+    const characters = '0123456789'; // You can customize characters as needed
+    const charactersLength = characters.length;
+    let result = prefix;
+
+    for (let i = 0; i < length - prefix.length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
   }
 
   //   Private Methods
